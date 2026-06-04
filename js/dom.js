@@ -54,6 +54,14 @@ async function renderIdeas(filter = 'Tous') {
   });
 }
 
+function ResetCounter() {
+
+    const remaining = 255;
+
+    counter.textContent =
+        `${remaining} caractères restants`;
+
+}
 function updateCounter() {
 
     const remaining =
@@ -64,3 +72,4 @@ function updateCounter() {
 
 }
 inputDesc.addEventListener("input", updateCounter);
+

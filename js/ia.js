@@ -52,6 +52,8 @@ Réponds UNIQUEMENT en JSON sans aucun texte autour :
   inputTitle.value       = '';
   inputDesc.value        = '';
 
+  ResetCounter()
+
   resetValidation()
 
 

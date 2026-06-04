@@ -31,6 +31,8 @@ async function addIdea() {
   inputCategory.value    = '';
   inputDesc.value        = '';
 
+  ResetCounter()
+
   resetValidation()
 
   btnAdd.disabled = false;
