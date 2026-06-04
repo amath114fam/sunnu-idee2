@@ -38,7 +38,7 @@ async function addIdea() {
 
 }
 
-async function deleteIdea(id) {
+async function deleteIdeaDB(id) {
   try {
     const { error } = await supabaseClient.from('ideas').delete().eq('id', id);
     if (error) throw error;
@@ -47,6 +47,30 @@ async function deleteIdea(id) {
   }
   await renderIdeas();
 }
+
+let ideaToDelete = null;
+
+function deleteIdea(id) {
+  ideaToDelete = id;
+  const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+  modal.show();
+}
+
+async function confirmDelete() {
+  if (ideaToDelete) {
+    try {
+      await deleteIdeaDB(ideaToDelete);
+      await renderIdeas();
+      ideaToDelete = null;
+      bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+    } catch (error) {
+      console.log('Erreur suppression :', error);
+      alert('Une erreur est survenue, veuillez réessayer !');
+    }
+  }
+};
+
+document.getElementById('btn-confirm-delete').addEventListener('click',confirmDelete);
 
 async function openEdit(id) {
   const ideas = await getIdeas();
