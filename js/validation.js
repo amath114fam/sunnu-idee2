@@ -1,16 +1,17 @@
+import { inputTitle, inputCategory, inputDesc } from './dom.js'
 
 const titleError    = document.getElementById('titleError');
 const categoryError = document.getElementById('categoryError');
 const descError     = document.getElementById('descError');
-const modalError     = document.getElementById('modalError');
+const modalError    = document.getElementById('modalError');
 
-function sanitize(str) {
+export function sanitize(str) {
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
 }
 
-function validateTitle() {
+export function validateTitle() {
   const value = inputTitle.value.trim();
 
   if (!value) {
@@ -33,7 +34,7 @@ function validateTitle() {
   return true;
 }
 
-function validateCategory() {
+export function validateCategory() {
   const value = inputCategory.value.trim();
 
   if (!value) {
@@ -49,7 +50,7 @@ function validateCategory() {
   return true;
 }
 
-function validateDescription() {
+export function validateDescription() {
   const value = inputDesc.value.trim();
 
   if (!value) {
@@ -72,11 +73,11 @@ function validateDescription() {
   return true;
 }
 
-function validateModal() {
-   return  modalError.textContent="Veillez remplir tous les champs!"
+export function validateModal() {
+  modalError.textContent = "Veuillez remplir tous les champs !";
 }
 
-function resetValidation() {
+export function resetValidation() {
   [inputTitle, inputCategory, inputDesc].forEach(field => {
     field.classList.remove("is-valid", "is-invalid");
   });
@@ -86,7 +87,7 @@ function resetValidation() {
   });
 }
 
-function validateIdea() {
+export function validateIdea() {
   const isTitleValid       = validateTitle();
   const isCategoryValid    = validateCategory();
   const isDescriptionValid = validateDescription();
@@ -94,12 +95,12 @@ function validateIdea() {
   return isTitleValid && isCategoryValid && isDescriptionValid;
 }
 
-function showNotification(notif) {
+export function showNotification(notif) {
   const notification = document.createElement("div");
   notification.classList.add("notification");
   notification.textContent = notif;
   document.body.appendChild(notification);
   setTimeout(() => {
-      notification.remove();
+    notification.remove();
   }, 3000);
 }

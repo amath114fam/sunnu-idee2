@@ -1,14 +1,14 @@
-const btnAdd         = document.getElementById('btn-add-idea');
-const inputTitle     = document.getElementById('idea-title');
-const inputCategory  = document.getElementById('idea-category');
-const inputDesc      = document.getElementById('idea-description');
-const ideasContainer = document.getElementById('ideas-container');
-const ideasCount     = document.getElementById('ideas-count');
-const emptyState     = document.getElementById('empty-state');
-const storyError = document.getElementById("storyError");
+import { getIdeas } from './supabase.js'
 
+export const btnAdd         = document.getElementById('btn-add-idea');
+export const inputTitle     = document.getElementById('idea-title');
+export const inputCategory  = document.getElementById('idea-category');
+export const inputDesc      = document.getElementById('idea-description');
+export const ideasContainer = document.getElementById('ideas-container');
+export const ideasCount     = document.getElementById('ideas-count');
+export const emptyState     = document.getElementById('empty-state');
 
-function buildCard(idea) {
+export function buildCard(idea) {
   return `
     <div class="card h-100 shadow-sm">
       <div class="card-body">
@@ -28,7 +28,7 @@ function buildCard(idea) {
   `;
 }
 
-async function renderIdeas(filter = 'Tous') {
+export async function renderIdeas(filter = 'Tous') {
   const ideas = await getIdeas();
 
   const filtered = filter === 'Tous'
@@ -54,7 +54,7 @@ async function renderIdeas(filter = 'Tous') {
   });
 }
 
-function ResetCounter() {
+export function ResetCounter() {
 
     const remaining = 255;
 
@@ -62,7 +62,7 @@ function ResetCounter() {
         `${remaining} caractères restants`;
 
 }
-function updateCounter() {
+export function updateCounter() {
 
     const remaining =
         255 - inputDesc.value.length;

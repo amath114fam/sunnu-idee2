@@ -1,4 +1,12 @@
-async function suggestIdea() {
+import { saveIdeas } from './supabase.js'
+import { renderIdeas, inputTitle, inputDesc,ResetCounter } from './dom.js'
+import { sanitize, validateTitle, validateDescription, resetValidation, showNotification }  from './validation.js'
+
+// const API_KEY = 
+// console.log(API_KEY);
+
+
+export async function suggestIdea() {
   const title       = sanitize(document.getElementById('idea-title').value.trim());
   const description = sanitize(document.getElementById('idea-description').value.trim());
 
@@ -17,7 +25,7 @@ async function suggestIdea() {
     method: 'POST',
     headers: { 
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer '
+      'Authorization': `Bearer ${import.meta.env.VITE_OPENROUTER_KEY}`
     },
     body: JSON.stringify({
       model: "meta-llama/llama-3.3-70b-instruct",
@@ -45,19 +53,17 @@ Réponds UNIQUEMENT en JSON sans aucun texte autour :
     category    : result.category,
     description : description
   };
-
+  
   await saveIdeas(newIdea);
   await renderIdeas();
   showNotification("L'idée ajoutée avec succès")
 
-
-  inputTitle.value       = '';
-  inputDesc.value        = '';
+  inputTitle.value = '';
+  inputDesc.value = '';
 
   ResetCounter()
 
   resetValidation()
-
 
   document.getElementById('btn-suggest').disabled = false;
   document.getElementById('btn-suggest').innerHTML = '<i class="bi bi-stars me-2"></i>Suggérer avec l\'IA';

@@ -1,6 +1,12 @@
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+import { createClient } from '@supabase/supabase-js' 
+import { renderIdeas } from './dom.js' 
 
-async function getIdeas() {
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY;
+
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY); 
+
+export async function getIdeas() {
   try {
     const { data, error } = await supabaseClient.from('ideas').select('*').order('created_at', { ascending: false });
     if (error) throw error;
@@ -11,7 +17,7 @@ async function getIdeas() {
   }
 }
 
-async function saveIdeas(newIdea) {
+export async function saveIdeas(newIdea) {
   try {
     const { error } = await supabaseClient.from('ideas').insert(newIdea);
     if (error) throw error;
@@ -20,7 +26,7 @@ async function saveIdeas(newIdea) {
   }
 }
 
-async function updateIdeaDB(id, title, category, description) {
+export async function updateIdeaDB(id, title, category, description) {
   try {
     const { error } = await supabaseClient.from('ideas').update({ title, category, description }).eq('id', id);
     if (error) throw error;
@@ -29,7 +35,7 @@ async function updateIdeaDB(id, title, category, description) {
   }
 }
 
-async function deleteIdeaDB(id) {
+export async function deleteIdeaDB(id) {
   try {
     const { error } = await supabaseClient.from('ideas').delete().eq('id', id);
     if (error) throw error;
@@ -37,3 +43,15 @@ async function deleteIdeaDB(id) {
     console.log('Erreur deleteIdeaDB :', error);
   }
 }
+
+const channel = supabaseClient
+  .channel("realtime:ideas")
+  .on(
+    "postgres_changes",
+    { event: "*", schema: "public", table: "ideas" },
+    () => {
+      renderIdeas();
+  
+    }
+  )
+  .subscribe();

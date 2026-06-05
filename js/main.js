@@ -1,3 +1,14 @@
+import { getIdeas, saveIdeas, updateIdeaDB, deleteIdeaDB } from './supabase.js'
+
+import { btnAdd, inputTitle, inputCategory, inputDesc, ideasContainer, ideasCount,
+emptyState, renderIdeas, buildCard, ResetCounter } from './dom.js'
+
+import { sanitize, validateIdea, validateModal, validateTitle, validateCategory,
+ validateDescription, resetValidation, showNotification } from './validation.js'
+
+import { suggestIdea } from './ia.js'
+
+
 const filterButtons = document.querySelectorAll('[data-filter]');
 
 filterButtons.forEach(button => {
@@ -38,12 +49,11 @@ async function addIdea() {
 
   btnAdd.disabled = false;
   btnAdd.innerHTML = '<i class="bi bi-send me-2"></i>Publier l\'idée';
-
 }
 
 let ideaToDelete = null;
 
-function deleteIdea(id) {
+export function deleteIdea(id) {
   ideaToDelete = id;
   const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
   modal.show();
@@ -55,18 +65,21 @@ async function confirmDelete() {
       await deleteIdeaDB(ideaToDelete);
       await renderIdeas();
       showNotification("L'idée supprimée avec succès")
+      
       ideaToDelete = null;
+      document.activeElement.blur();
+
       bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
     } catch (error) {
-      console.log('Erreur suppression :', error);
+      console.error('Erreur suppression :', error);
       alert('Une erreur est survenue, veuillez réessayer !');
     }
   }
-};
+}
 
-document.getElementById('btn-confirm-delete').addEventListener('click',confirmDelete);
+document.getElementById('btn-confirm-delete').addEventListener('click', confirmDelete);
 
-async function openEdit(id) {
+export async function openEdit(id) {
   const ideas = await getIdeas();
   const idea = ideas.find(idea => idea.id === id);
 
@@ -78,10 +91,14 @@ async function openEdit(id) {
   const modal = new bootstrap.Modal(document.getElementById('editModal'));
   modal.show();
 }
+// ─── Exposition globale pour les onclick inline dans le HTML ─────────────────
+// Nécessaire avec Vite : les modules ES ne sont pas dans window automatiquement
+window.openEdit   = openEdit;
+window.deleteIdea = deleteIdea;
 
 async function saveEdit() {
   const id          = Number(document.getElementById('edit-id').value);
-  const title       = sanitize(document.getElementById('edit-title').value.trim());  
+  const title       = sanitize(document.getElementById('edit-title').value.trim());
   const category    = document.getElementById('edit-category').value;
   const description = sanitize(document.getElementById('edit-description').value.trim());
 
@@ -102,7 +119,7 @@ async function search() {
   const query = document.getElementById('search').value;
   const ideas = await getIdeas();
 
-  const filtered = ideas.filter(idea => 
+  const filtered = ideas.filter(idea =>
     idea.title.toLowerCase().includes(query.toLowerCase())
   );
 
@@ -129,8 +146,13 @@ btnAdd.addEventListener('click', addIdea);
 document.getElementById('btn-save-edit').addEventListener('click', saveEdit);
 document.getElementById('btnSearch').addEventListener('click', search);
 document.getElementById('btn-suggest').addEventListener('click', suggestIdea);
-inputTitle.addEventListener("blur", validateTitle)
-inputCategory.addEventListener("blur", validateCategory)
-inputDesc.addEventListener("blur", validateDescription)
+inputTitle.addEventListener('blur', validateTitle);
+inputCategory.addEventListener('blur', validateCategory);
+inputDesc.addEventListener('blur', validateDescription);
+
+// ─── Exposition globale pour les onclick inline dans le HTML ─────────────────
+// Nécessaire avec Vite : les modules ES ne sont pas dans window automatiquement
+window.openEdit   = openEdit;
+window.deleteIdea = deleteIdea;
 
 renderIdeas();
