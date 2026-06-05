@@ -17,7 +17,7 @@ async function suggestIdea() {
     method: 'POST',
     headers: { 
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer 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'
+      'Authorization': 'Bearer '
     },
     body: JSON.stringify({
       model: "meta-llama/llama-3.3-70b-instruct",
@@ -48,6 +48,8 @@ Réponds UNIQUEMENT en JSON sans aucun texte autour :
 
   await saveIdeas(newIdea);
   await renderIdeas();
+  showNotification("L'idée ajoutée avec succès")
+
 
   inputTitle.value       = '';
   inputDesc.value        = '';

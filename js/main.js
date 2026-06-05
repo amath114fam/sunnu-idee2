@@ -26,6 +26,7 @@ async function addIdea() {
 
   await saveIdeas(newIdea);
   await renderIdeas();
+  showNotification("L'idée ajoutée avec succès")
 
   inputTitle.value       = '';
   inputCategory.value    = '';
@@ -38,16 +39,6 @@ async function addIdea() {
   btnAdd.disabled = false;
   btnAdd.innerHTML = '<i class="bi bi-send me-2"></i>Publier l\'idée';
 
-}
-
-async function deleteIdeaDB(id) {
-  try {
-    const { error } = await supabaseClient.from('ideas').delete().eq('id', id);
-    if (error) throw error;
-  } catch (error) {
-    console.log('Erreur deleteIdea :', error);
-  }
-  await renderIdeas();
 }
 
 let ideaToDelete = null;
@@ -63,6 +54,7 @@ async function confirmDelete() {
     try {
       await deleteIdeaDB(ideaToDelete);
       await renderIdeas();
+      showNotification("L'idée supprimée avec succès")
       ideaToDelete = null;
       bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
     } catch (error) {
@@ -100,6 +92,7 @@ async function saveEdit() {
 
   await updateIdeaDB(id, title, category, description);
   await renderIdeas();
+  showNotification("L'idée mise à jour avec succès")
 
   document.getElementById('btn-save-edit').blur();
   bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();

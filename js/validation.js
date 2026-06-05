@@ -93,3 +93,13 @@ function validateIdea() {
 
   return isTitleValid && isCategoryValid && isDescriptionValid;
 }
+
+function showNotification(notif) {
+  const notification = document.createElement("div");
+  notification.classList.add("notification");
+  notification.textContent = notif;
+  document.body.appendChild(notification);
+  setTimeout(() => {
+      notification.remove();
+  }, 3000);
+}
