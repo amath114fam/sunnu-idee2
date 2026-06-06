@@ -8,7 +8,7 @@ import { sanitize, validateIdea, validateModal, validateTitle, validateCategory,
 
 import { suggestIdea } from './ia.js'
 
-
+// La fonction pour filtrer par catégorie
 const filterButtons = document.querySelectorAll('[data-filter]');
 
 filterButtons.forEach(button => {
@@ -18,6 +18,8 @@ filterButtons.forEach(button => {
     renderIdeas(this.dataset.filter);
   });
 });
+
+// La fonction pour ajouter une idée
 
 async function addIdea() {
   const title       = sanitize(document.getElementById('idea-title').value.trim());
@@ -51,6 +53,7 @@ async function addIdea() {
   btnAdd.innerHTML = '<i class="bi bi-send me-2"></i>Publier l\'idée';
 }
 
+// La fonction pour supprimer une idée
 let ideaToDelete = null;
 
 export function deleteIdea(id) {
@@ -59,6 +62,7 @@ export function deleteIdea(id) {
   modal.show();
 }
 
+// La fonction pour confirmer la suppression
 async function confirmDelete() {
   if (ideaToDelete) {
     try {
@@ -72,13 +76,13 @@ async function confirmDelete() {
       bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
     } catch (error) {
       console.error('Erreur suppression :', error);
-      alert('Une erreur est survenue, veuillez réessayer !');
     }
   }
 }
 
 document.getElementById('btn-confirm-delete').addEventListener('click', confirmDelete);
 
+// La fonction pour afficher le modal de modification
 export async function openEdit(id) {
   const ideas = await getIdeas();
   const idea = ideas.find(idea => idea.id === id);
@@ -96,6 +100,7 @@ export async function openEdit(id) {
 window.openEdit   = openEdit;
 window.deleteIdea = deleteIdea;
 
+// La fonction pour sauvegarder la modification
 async function saveEdit() {
   const id          = Number(document.getElementById('edit-id').value);
   const title       = sanitize(document.getElementById('edit-title').value.trim());
@@ -115,8 +120,15 @@ async function saveEdit() {
   bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
 }
 
+// La fonction pour la recherche par titre
 async function search() {
   const query = document.getElementById('search').value;
+
+  if (query === "") {
+    await renderIdeas();
+    return;
+  }
+
   const ideas = await getIdeas();
 
   const filtered = ideas.filter(idea =>
@@ -145,14 +157,11 @@ async function search() {
 btnAdd.addEventListener('click', addIdea);
 document.getElementById('btn-save-edit').addEventListener('click', saveEdit);
 document.getElementById('btnSearch').addEventListener('click', search);
+document.getElementById('search').addEventListener('input', search);
 document.getElementById('btn-suggest').addEventListener('click', suggestIdea);
 inputTitle.addEventListener('blur', validateTitle);
 inputCategory.addEventListener('blur', validateCategory);
 inputDesc.addEventListener('blur', validateDescription);
 
-// ─── Exposition globale pour les onclick inline dans le HTML ─────────────────
-// Nécessaire avec Vite : les modules ES ne sont pas dans window automatiquement
-window.openEdit   = openEdit;
-window.deleteIdea = deleteIdea;
 
 renderIdeas();

@@ -2,9 +2,6 @@ import { saveIdeas } from './supabase.js'
 import { renderIdeas, inputTitle, inputDesc,ResetCounter } from './dom.js'
 import { sanitize, validateTitle, validateDescription, resetValidation, showNotification }  from './validation.js'
 
-// const API_KEY = 
-// console.log(API_KEY);
-
 
 export async function suggestIdea() {
   const title       = sanitize(document.getElementById('idea-title').value.trim());
