@@ -16,6 +16,7 @@ grâce à Supabase.
 - **HTML5** - Structure de la page
 - **CSS3** - Mise en forme et styles personnalisés
 - **JavaScript (Vanilla)** - Logique et manipulation du DOM
+- **Vite.js** - Serveur de développement et outil de compilation
 - **Bootstrap 5** - Composants UI et mise en page responsive
 - **Bootstrap Icons** - Icônes
 - **Supabase** - Base de données en ligne et temps réel
@@ -36,4 +37,5 @@ grâce à Supabase.
 - **Mode nuit/jour** pour le confort visuel
 - **Persistance** des données grâce à Supabase
 - **Collaboratif** : toutes les idées sont visibles depuis n'importe quel appareil
+- **Temps réel** : les idées se mettent à jour automatiquement sans recharger la page
 
